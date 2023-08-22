@@ -1,8 +1,9 @@
-import { useRef, type FC, useState } from "react";
+import { useRef, type FC, useState, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
 import ModalContainer from "../../UI/ModalContainer";
-import { useAppDispatch } from "@/store/store";
-import { deleteBrand } from "@/store/brandSlice/brandAPI";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { deleteBrand, getBrands } from "@/store/brandSlice/brandAPI";
+import ListBoxUi from "@/components/UI/ListBox";
 
 interface BrandDeleteModalProps {
   open: boolean;
@@ -11,19 +12,22 @@ interface BrandDeleteModalProps {
 
 const BrandDeleteModal: FC<BrandDeleteModalProps> = ({ open, setOpen }) => {
   const cancelButtonRef = useRef(null);
-  const [brandName, setBrandName] = useState("");
   const dispatch = useAppDispatch();
+  const { brands } = useAppSelector((state) => state.brand);
+  const [selectedBrand, setSelectedBrand] = useState("Choose a brand");
 
-  const deleteTypeHandler = async () => {
-    if (brandName.length === 0) {
-      return alert("Enter brand name!");
-    }
-    const data: any = await dispatch(deleteBrand(brandName));
+  useEffect(() => {
+    dispatch(getBrands());
+  }, []);
+  console.log(selectedBrand);
+
+  const deleteBrandHandler = async () => {
+    const data: any = await dispatch(deleteBrand(selectedBrand));
     if (data.error) {
       return alert("Such brand doesn't exist!");
     }
+    setSelectedBrand("Choose a brand");
     setOpen(false);
-    setBrandName("");
   };
 
   return (
@@ -43,15 +47,10 @@ const BrandDeleteModal: FC<BrandDeleteModalProps> = ({ open, setOpen }) => {
                 Delete Brand
               </Dialog.Title>
               <div className="mt-2">
-                <input
-                  value={brandName}
-                  onChange={(e) => setBrandName(e.target.value)}
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                <ListBoxUi
+                  list={brands}
+                  setSelected={setSelectedBrand}
+                  selected={selectedBrand}
                 />
               </div>
             </div>
@@ -61,7 +60,7 @@ const BrandDeleteModal: FC<BrandDeleteModalProps> = ({ open, setOpen }) => {
           <button
             type="button"
             className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-            onClick={deleteTypeHandler}
+            onClick={deleteBrandHandler}
           >
             Delete Brand
           </button>

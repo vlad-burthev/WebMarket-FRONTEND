@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   checkExtraReducer,
+  deleteUserExtraReducer,
+  getUsersExtraReducer,
   loginExtraReducer,
   registrationExtraReducer,
 } from "./userExtraReducers";
-import { login } from "./userAPI";
 
 export type T_User = {
   id: number | null;
@@ -20,6 +21,7 @@ interface I_InitialState {
   error: null | string;
   isAuth: boolean;
   isAdmin: boolean;
+  users: any[];
   user: T_User | undefined;
 }
 
@@ -30,6 +32,7 @@ export const initialState: I_InitialState = {
   error: "idle",
   isAuth: false,
   isAdmin: false,
+  users: [],
   user: {
     id: null,
     email: null,
@@ -53,13 +56,19 @@ const userSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
+    setUsers: (state, action) => {
+      state.user = action.payload;
+    },
   },
   extraReducers: (builder) => {
     registrationExtraReducer(builder);
     loginExtraReducer(builder);
     checkExtraReducer(builder);
+    getUsersExtraReducer(builder);
+    deleteUserExtraReducer(builder);
   },
 });
 
-export const { setLoginLogout, setIsAdmin, setUser } = userSlice.actions;
+export const { setLoginLogout, setIsAdmin, setUser, setUsers } =
+  userSlice.actions;
 export default userSlice.reducer;

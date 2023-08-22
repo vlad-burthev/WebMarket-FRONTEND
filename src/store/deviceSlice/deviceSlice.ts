@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   createDeviceExtraReducer,
+  deleteDeviceExtraReducer,
   getDevicesExtraReducer,
   getOneDeviceExtraReducer,
 } from "./deviceExtraReducer";
@@ -75,6 +76,7 @@ const deviceSlice = createSlice({
     getDevicesExtraReducer(builder);
     getOneDeviceExtraReducer(builder);
     createDeviceExtraReducer(builder);
+    deleteDeviceExtraReducer(builder);
   },
 });
 

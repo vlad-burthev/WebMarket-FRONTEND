@@ -1,4 +1,4 @@
-import { $authHost, $host } from "@/services/axiosConfig";
+import { $adminHost, $authHost, $host } from "@/services/axiosConfig";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import jwtDecode from "jwt-decode";
@@ -23,16 +23,22 @@ export const registration = createAsyncThunk(
     role = "USER",
     phoneNumber,
   }: registrationArgs) => {
-    const { data } = await $host.post("api/user/registration", {
-      email,
-      firstName,
-      lastName,
-      password,
-      role,
-      phoneNumber,
-    });
-    localStorage.setItem("token", data.token);
-    return jwtDecode(data.token);
+    try {
+      const { data } = await $host.post("api/user/registration", {
+        email,
+        firstName,
+        lastName,
+        password,
+        role,
+        phoneNumber,
+      });
+      localStorage.setItem("token", data.token);
+      return jwtDecode(data.token);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+    }
   }
 );
 
@@ -65,8 +71,10 @@ export const login = createAsyncThunk(
 
       const token = jwtDecode(data.token);
       return token;
-    } catch (error: any) {
-      throw new Error(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
     }
   }
 );
@@ -97,8 +105,34 @@ export const check = createAsyncThunk("user/auth", async (_, { dispatch }) => {
     } else {
       return;
     }
-  } catch (error) {
-    console.error("Ошибка при выполнении запроса: ", error);
-    throw error;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
   }
 });
+
+export const getUsers = createAsyncThunk("user/getUsers", async () => {
+  try {
+    const { data } = await $adminHost.get("api/user");
+    return data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+  }
+});
+
+export const deleteUser = createAsyncThunk(
+  "user/deleteUser",
+  async (email: string) => {
+    try {
+      const { data } = await $adminHost.post("api/user/deleteUser", { email });
+      return data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+    }
+  }
+);

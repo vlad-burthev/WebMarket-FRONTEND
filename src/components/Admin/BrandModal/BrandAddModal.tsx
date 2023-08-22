@@ -2,8 +2,8 @@ import { useRef, type FC, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import ModalContainer from "../../UI/ModalContainer";
 import { useAppDispatch } from "@/store/store";
-import { createBrand } from "@/store/brandSlice/brandAPI";
-// import { creaseBrand } from "@/store/brandSlice/brandAPI";
+import { createBrand, getBrands } from "@/store/brandSlice/brandAPI";
+import GreenCustomButton from "@/components/UI/GreenCustomButton";
 
 interface BrandAddModalProps {
   open: boolean;
@@ -24,6 +24,7 @@ const BrandAddModal: FC<BrandAddModalProps> = ({ open, setOpen }) => {
       return alert("Such brand already exists!");
     }
     setOpen(false);
+    dispatch(getBrands());
     setBrandName("");
   };
 
@@ -59,13 +60,8 @@ const BrandAddModal: FC<BrandAddModalProps> = ({ open, setOpen }) => {
           </div>
         </div>
         <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-          <button
-            type="button"
-            className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto"
-            onClick={createBrandHandler}
-          >
-            Create Brand
-          </button>
+          <GreenCustomButton text="Create Brand" onClick={createBrandHandler} />
+
           <button
             type="button"
             className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"

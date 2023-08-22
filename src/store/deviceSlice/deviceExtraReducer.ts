@@ -1,6 +1,11 @@
 import { ActionReducerMapBuilder } from "@reduxjs/toolkit";
 import { deviceRootState } from "./deviceSlice";
-import { createDevice, getDevices, getOneDevice } from "./deviceAPI";
+import {
+  createDevice,
+  deleteDevice,
+  getDevices,
+  getOneDevice,
+} from "./deviceAPI";
 
 export const getDevicesExtraReducer = (
   builder: ActionReducerMapBuilder<deviceRootState>
@@ -54,6 +59,24 @@ export const createDeviceExtraReducer = (
       state.error = "idle";
     })
     .addCase(createDevice.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.error.message || "Произошла ошибка";
+    });
+};
+
+export const deleteDeviceExtraReducer = (
+  builder: ActionReducerMapBuilder<deviceRootState>
+) => {
+  builder
+    .addCase(deleteDevice.pending, (state) => {
+      state.status = "pending";
+      state.error = "idle";
+    })
+    .addCase(deleteDevice.fulfilled, (state) => {
+      state.status = "succeeded";
+      state.error = "idle";
+    })
+    .addCase(deleteDevice.rejected, (state, action) => {
       state.status = "failed";
       state.error = action.error.message || "Произошла ошибка";
     });

@@ -1,6 +1,6 @@
 import { useRef, type FC, useState } from "react";
 import { Dialog } from "@headlessui/react";
-import { createType } from "@/store/typeSlice/typeAPI";
+import { createType, getTypes } from "@/store/typeSlice/typeAPI";
 import ModalContainer from "../../UI/ModalContainer";
 import { useAppDispatch } from "@/store/store";
 
@@ -23,6 +23,7 @@ const TypesAddModal: FC<TypesAddModalProps> = ({ open, setOpen }) => {
       return alert("Such type already exists!");
     }
     setOpen(false);
+    dispatch(getTypes());
     setTypeName("");
   };
 

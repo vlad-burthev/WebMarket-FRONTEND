@@ -39,10 +39,15 @@ export const getOneDevice = createAsyncThunk(
 
 export const createDevice = createAsyncThunk(
   "device/createDevice",
-  async (device: CreateDeviceArgs) => {
-    const { data } = await $adminHost.post("api/device/", device);
-
-    return data;
+  async (formData: CreateDeviceArgs) => {
+    try {
+      const { data } = await $adminHost.post("api/device", formData);
+      return data;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+    }
   }
 );
 
@@ -53,12 +58,24 @@ interface addRating {
 export const addRating = createAsyncThunk(
   "device/addRating",
   async ({ id, rate }: addRating) => {
-    const token = localStorage.getItem("token ");
-    await $authHost.post(`api/rating/${id}`, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-      rate,
-    });
+    try {
+      await $authHost.post(`api/rating/${id}`, {
+        rate,
+      });
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  }
+);
+
+export const deleteDevice = createAsyncThunk(
+  "device/deleteDevice",
+  async (name: string) => {
+    try {
+      const { data } = await $adminHost.post("api/device/delete", { name });
+      return data;
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
   }
 );

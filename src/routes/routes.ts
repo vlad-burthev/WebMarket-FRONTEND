@@ -9,8 +9,6 @@ import {
   SHOP_ROUTE,
 } from "@/constants/constants";
 
-import Shop from "@/pages/Shop";
-
 const Login = lazy(() => import("@/pages/Login"));
 const Registration = lazy(() => import("@/pages/Registration"));
 const Admin = lazy(() => import("@/pages/Admin"));
@@ -18,6 +16,7 @@ const Order = lazy(() => import("@/pages/Order"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const Basket = lazy(() => import("@/pages/Basket"));
 const Device = lazy(() => import("@/pages/Device"));
+const Shop = lazy(() => import("@/pages/Shop"));
 
 export const publicRoutes = [
   {

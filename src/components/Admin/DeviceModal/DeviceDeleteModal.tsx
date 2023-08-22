@@ -1,32 +1,26 @@
-import { useRef, type FC, useState, useEffect } from "react";
+import { useRef, type FC, useState } from "react";
 import { Dialog } from "@headlessui/react";
-import { deleteType, getTypes } from "@/store/typeSlice/typeAPI";
 import ModalContainer from "../../UI/ModalContainer";
-import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setSelectedType, setTypes } from "@/store/typeSlice/typeSlice";
-import ListBoxUi from "@/components/UI/ListBox";
+import { useAppDispatch } from "@/store/store";
+import { deleteDevice } from "@/store/deviceSlice/deviceAPI";
 
-interface TypesDeleteModalProps {
+interface DeviceDeleteModalProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const TypesDeleteModal: FC<TypesDeleteModalProps> = ({ open, setOpen }) => {
+const DeviceDeleteModal: FC<DeviceDeleteModalProps> = ({ open, setOpen }) => {
   const cancelButtonRef = useRef(null);
-  const [selectedType, setSelectedType] = useState("Choose a type");
+  const [device, setDevice] = useState("");
   const dispatch = useAppDispatch();
-  const { types } = useAppSelector((state) => state.type);
-  useEffect(() => {
-    dispatch(getTypes());
-  }, []);
 
-  const deleteTypeHandler = async () => {
-    const data: any = await dispatch(deleteType(selectedType));
+  const deleteDeviceHandler = async () => {
+    const data: any = await dispatch(deleteDevice(device));
     if (data.error) {
-      return alert("Such brand doesn't exist!");
+      return alert("Such device doesn't exist!");
     }
-    dispatch(setTypes(types.filter((type) => type.name !== selectedType)));
-    setSelectedType("Choose a type");
+
+    setDevice("");
     setOpen(false);
   };
 
@@ -44,14 +38,19 @@ const TypesDeleteModal: FC<TypesDeleteModalProps> = ({ open, setOpen }) => {
                 as="h3"
                 className="text-base font-semibold leading-6 text-gray-900"
               >
-                Delete Type
+                Delete device
               </Dialog.Title>
               <div className="mt-2">
-                <ListBoxUi
-                  list={types}
-                  setSelected={setSelectedType}
-                  selected={selectedType}
-                />
+                <div className="mt-2">
+                  <input
+                    value={device}
+                    onChange={(e) => setDevice(e.target.value)}
+                    name="deviceName"
+                    type="text"
+                    required
+                    className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -60,9 +59,9 @@ const TypesDeleteModal: FC<TypesDeleteModalProps> = ({ open, setOpen }) => {
           <button
             type="button"
             className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-            onClick={deleteTypeHandler}
+            onClick={deleteDeviceHandler}
           >
-            Delete Type
+            Delete device
           </button>
           <button
             type="button"
@@ -78,4 +77,4 @@ const TypesDeleteModal: FC<TypesDeleteModalProps> = ({ open, setOpen }) => {
   );
 };
 
-export default TypesDeleteModal;
+export default DeviceDeleteModal;
