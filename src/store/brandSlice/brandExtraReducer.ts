@@ -1,6 +1,6 @@
 import { ActionReducerMapBuilder } from "@reduxjs/toolkit";
 
-import { createBrand, getBrands } from "./brandAPI";
+import { createBrand, deleteBrand, getBrands } from "./brandAPI";
 import { brandsRootState } from "./brandSlice";
 
 export const getBrandsExtraReducer = (
@@ -30,12 +30,29 @@ export const createBrandExtraReducer = (
       state.status = "pending";
       state.error = null;
     })
-    .addCase(createBrand.fulfilled, (state, action) => {
+    .addCase(createBrand.fulfilled, (state) => {
       state.status = "succeeded";
-      state.brands = action.payload;
       state.error = null;
     })
     .addCase(createBrand.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.error.message || "Произошла ошибка";
+    });
+};
+
+export const deleteBrandExtraReducer = (
+  builder: ActionReducerMapBuilder<brandsRootState>
+) => {
+  builder
+    .addCase(deleteBrand.pending, (state) => {
+      state.status = "pending";
+      state.error = null;
+    })
+    .addCase(deleteBrand.fulfilled, (state) => {
+      state.status = "succeeded";
+      state.error = null;
+    })
+    .addCase(deleteBrand.rejected, (state, action) => {
       state.status = "failed";
       state.error = action.error.message || "Произошла ошибка";
     });

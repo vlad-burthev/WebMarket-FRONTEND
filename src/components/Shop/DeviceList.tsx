@@ -3,11 +3,12 @@ import { getDevices } from "@/store/deviceSlice/deviceAPI";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useEffect, type FC } from "react";
 import { Link } from "react-router-dom";
+import Pagination from "./Pagination";
 
 interface DeviceListProps {}
 
 const DeviceList: FC<DeviceListProps> = () => {
-  const { devices, page } = useAppSelector((state) => state.device);
+  const { devices, page, limit } = useAppSelector((state) => state.device);
   const { selectedType } = useAppSelector((state) => state.type);
   const { selectedBrand } = useAppSelector((state) => state.brand);
 
@@ -15,10 +16,10 @@ const DeviceList: FC<DeviceListProps> = () => {
   useEffect(() => {
     dispatch(
       getDevices({
-        brandId: null,
-        typeId: null,
+        brandId: selectedBrand,
+        typeId: selectedType,
         page: page,
-        limit: 24,
+        limit: limit,
       })
     );
   }, [devices.count, selectedBrand, selectedType]);
@@ -26,15 +27,13 @@ const DeviceList: FC<DeviceListProps> = () => {
   useEffect(() => {
     dispatch(
       getDevices({
-        brandId: null,
-        typeId: null,
-        page: 1,
-        limit: 24,
+        brandId: selectedBrand,
+        typeId: selectedType,
+        page: page,
+        limit: limit,
       })
     );
   }, [page, selectedBrand, selectedType]);
-
-  console.log(devices);
 
   return (
     <>
@@ -65,6 +64,7 @@ const DeviceList: FC<DeviceListProps> = () => {
               ))}
             </div>
           </div>
+          <Pagination />
         </div>
       )}
     </>

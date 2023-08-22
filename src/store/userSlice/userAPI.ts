@@ -1,10 +1,8 @@
 import { $authHost, $host } from "@/services/axiosConfig";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import type { AxiosError } from "axios";
-import axios from "axios";
 
 import jwtDecode from "jwt-decode";
-import { setLoginLogout } from "./userSlice";
+import { T_User, setIsAdmin, setLoginLogout, setUser } from "./userSlice";
 
 interface registrationArgs {
   email: string;
@@ -45,15 +43,26 @@ interface loginArgs {
 
 export const login = createAsyncThunk(
   "user/login",
-  async ({ email, password }: loginArgs, { rejectWithValue, dispatch }) => {
+  async ({ email, password }: loginArgs, { dispatch }) => {
     try {
       const { data } = await $host.post("api/user/login", {
         email,
         password,
       });
 
+      const decode: T_User = jwtDecode(data.token);
+
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+      }
+
+      if (decode.role === "ADMIN") {
+        dispatch(setIsAdmin(true));
+      }
+
+      dispatch(setUser(data));
       dispatch(setLoginLogout(true));
-      localStorage.setItem("token", data.token);
+
       const token = jwtDecode(data.token);
       return token;
     } catch (error: any) {
@@ -62,20 +71,32 @@ export const login = createAsyncThunk(
   }
 );
 
-export const check = createAsyncThunk("user/auth", async () => {
+export const check = createAsyncThunk("user/auth", async (_, { dispatch }) => {
   try {
     const token = localStorage.getItem("token");
-    const { data } = await $authHost.get("api/user/auth", {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
 
-    if (data.token) {
-      localStorage.setItem("token", data.token);
+    if (token) {
+      const { data } = await $authHost.get("api/user/auth", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+
+      const decode: T_User = jwtDecode(data.token);
+
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+      }
+
+      if (decode.role === "ADMIN") {
+        dispatch(setIsAdmin(true));
+      }
+      dispatch(setUser(data));
+      dispatch(setLoginLogout(true));
+      return jwtDecode(data.token);
+    } else {
+      return;
     }
-
-    return jwtDecode(data.token);
   } catch (error) {
     console.error("Ошибка при выполнении запроса: ", error);
     throw error;

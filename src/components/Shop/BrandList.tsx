@@ -1,43 +1,45 @@
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { getTypes } from "@/store/typeSlice/typeAPI";
-import { setSelectedType } from "@/store/typeSlice/typeSlice";
+import { getBrands } from "@/store/brandSlice/brandAPI";
 import { useEffect, type FC } from "react";
+import { setSelectedBrand } from "@/store/brandSlice/brandSlice";
 
-interface TypeListProps {}
+interface BrandListProps {}
 
-const TypeList: FC<TypeListProps> = () => {
+const BrandList: FC<BrandListProps> = () => {
   const dispatch = useAppDispatch();
-  const { types } = useAppSelector((state) => state.type);
+  const { brands } = useAppSelector((state) => state.brand);
   useEffect(() => {
     try {
-      dispatch(getTypes());
+      dispatch(getBrands());
     } catch (error) {}
   }, []);
 
-  if (types.length === 0) {
+  if (brands.length === 0) {
     return "Loading...";
   }
+
   return (
     <>
-      <h1>Types</h1>
+      <h1>Brands</h1>
       <button
+        onClick={() => dispatch(setSelectedBrand(null))}
         type="button"
         className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
       >
         All
       </button>
-      {types.map((type: any) => (
+      {brands.map((brand: any) => (
         <button
-          key={type.id}
+          onClick={() => dispatch(setSelectedBrand(brand.id))}
+          key={brand.id}
           type="button"
-          onClick={() => dispatch(setSelectedType(type.id))}
           className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
         >
-          {type.name}
+          {brand.name}
         </button>
       ))}
     </>
   );
 };
 
-export default TypeList;
+export default BrandList;

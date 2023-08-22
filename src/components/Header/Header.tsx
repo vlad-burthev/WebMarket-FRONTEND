@@ -5,6 +5,7 @@ import { Bars3Icon } from "@heroicons/react/24/outline";
 
 import HeaderMob from "./HeaderMob";
 import {
+  ADMIN_ROUTE,
   BASKET_ROUTE,
   LOGIN_ROUTE,
   ORDER_ROUTE,
@@ -13,19 +14,24 @@ import {
 } from "@/constants/constants";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setLoginLogout, setUser } from "@/store/userSlice/userSlice";
-import { initialState as initialUserState } from "@/store/userSlice/userSlice";
+import {
+  setIsAdmin,
+  setLoginLogout,
+  setUser,
+} from "@/store/userSlice/userSlice";
 
 interface HeaderProps {}
 
 const Header: FC<HeaderProps> = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isAuth, isAdmin, status } = useAppSelector((state) => state.user);
+  const { isAuth, isAdmin } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
   const logoutUserHandler = () => {
+    localStorage.removeItem("token");
     dispatch(setLoginLogout(false));
-    dispatch(setUser(initialUserState.user));
+    dispatch(setIsAdmin(false));
+    dispatch(setUser(undefined));
   };
 
   return (
@@ -94,6 +100,14 @@ const Header: FC<HeaderProps> = () => {
               >
                 Logout
               </button>
+              {isAdmin && (
+                <Link
+                  to={ADMIN_ROUTE}
+                  className="ml-6 rounded-md px-2 py-0.5 text-sm font-semibold leading-6 bg-green-500 text-white border-2 border-white"
+                >
+                  Admin
+                </Link>
+              )}
             </>
           )}
         </div>

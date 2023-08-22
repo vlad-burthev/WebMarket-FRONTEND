@@ -6,7 +6,7 @@ import {
 } from "./userExtraReducers";
 import { login } from "./userAPI";
 
-type T_User = {
+export type T_User = {
   id: number | null;
   email: string | null;
   firstName: string | null;
@@ -20,7 +20,7 @@ interface I_InitialState {
   error: null | string;
   isAuth: boolean;
   isAdmin: boolean;
-  user: T_User;
+  user: T_User | undefined;
 }
 
 export type userRootState = I_InitialState;

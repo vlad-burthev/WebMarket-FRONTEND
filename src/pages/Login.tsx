@@ -1,8 +1,7 @@
-import ModalContainer from "@/components/UI/modal";
+import ErrorModal from "@/components/UI/ErrorModal";
 import { REGISTRATION_ROUTE, SHOP_ROUTE } from "@/constants/constants";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { login } from "@/store/userSlice/userAPI";
-import { setLoginLogout, setUser } from "@/store/userSlice/userSlice";
 import { useState, type FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -12,7 +11,7 @@ const Login: FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { user, status } = useAppSelector((state) => state.user);
+  const { status } = useAppSelector((state) => state.user);
   const dispath = useAppDispatch();
   const loginHandler = async () => {
     const data: any = await dispath(login({ email, password }));
@@ -21,8 +20,6 @@ const Login: FC = () => {
       ? alert("Неверный пароль или eamil")
       : navigate(SHOP_ROUTE);
   };
-
-  console.log(user);
 
   return (
     <>
@@ -107,7 +104,7 @@ const Login: FC = () => {
           </p>
         </div>
       </div>
-      <ModalContainer
+      <ErrorModal
         modalTitle="Forgot password ?"
         modalText="It's your problem, not mine. Create new account."
         linkName="Create new acc."

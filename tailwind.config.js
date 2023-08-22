@@ -6,6 +6,9 @@ export default {
       aspectRatio: {
         "3/4": "3 / 4",
       },
+      gridTemplateRows: {
+        "[auto,auto,1fr]": "auto auto 1fr",
+      },
     },
   },
   plugins: [],

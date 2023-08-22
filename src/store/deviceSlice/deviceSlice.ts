@@ -5,7 +5,7 @@ import {
   getOneDeviceExtraReducer,
 } from "./deviceExtraReducer";
 
-type T_Device = {
+export type T_Device = {
   brandId: number | undefined;
   createdAt: string | undefined;
   id: number | undefined;
@@ -30,6 +30,7 @@ interface I_InitialState {
   page: number;
   devices: DevicesData;
   device: T_Device;
+  limit: 24;
 }
 
 const initialState: I_InitialState = {
@@ -52,6 +53,7 @@ const initialState: I_InitialState = {
     updatedAt: undefined,
   },
   page: 1,
+  limit: 24,
   status: "idle",
   error: null,
 };
@@ -61,7 +63,14 @@ export type deviceRootState = I_InitialState;
 const deviceSlice = createSlice({
   name: "device",
   initialState,
-  reducers: {},
+  reducers: {
+    setDevice: (state, action) => {
+      state.device = action.payload;
+    },
+    setPage: (state, action) => {
+      state.page = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     getDevicesExtraReducer(builder);
     getOneDeviceExtraReducer(builder);
@@ -69,4 +78,5 @@ const deviceSlice = createSlice({
   },
 });
 
+export const { setDevice, setPage } = deviceSlice.actions;
 export default deviceSlice.reducer;

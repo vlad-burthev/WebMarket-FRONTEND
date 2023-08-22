@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   createBrandExtraReducer,
+  deleteBrandExtraReducer,
   getBrandsExtraReducer,
 } from "./brandExtraReducer";
 
@@ -24,6 +25,9 @@ const brandSlice = createSlice({
   name: "brands",
   initialState,
   reducers: {
+    setBrands: (state, action) => {
+      state.brands = action.payload;
+    },
     setSelectedBrand: (state, action) => {
       state.selectedBrand = action.payload;
     },
@@ -31,9 +35,9 @@ const brandSlice = createSlice({
   extraReducers: (builder) => {
     getBrandsExtraReducer(builder);
     createBrandExtraReducer(builder);
+    deleteBrandExtraReducer(builder);
   },
 });
 
+export const { setSelectedBrand, setBrands } = brandSlice.actions;
 export default brandSlice.reducer;
-
-export const { setSelectedBrand } = brandSlice.actions;

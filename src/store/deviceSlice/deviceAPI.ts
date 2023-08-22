@@ -1,5 +1,6 @@
-import { $adminHost, $host } from "@/services/axiosConfig";
+import { $adminHost, $authHost, $host } from "@/services/axiosConfig";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { setDevice } from "./deviceSlice";
 
 interface DeviceArgs {
   page: number;
@@ -29,8 +30,9 @@ export const getDevices = createAsyncThunk(
 
 export const getOneDevice = createAsyncThunk(
   "device/getOneDevice",
-  async (slug: string) => {
+  async (slug: string, { dispatch }) => {
     const { data } = await $host.get(`api/device/${slug}`);
+    dispatch(setDevice(data));
     return data;
   }
 );
@@ -41,5 +43,22 @@ export const createDevice = createAsyncThunk(
     const { data } = await $adminHost.post("api/device/", device);
 
     return data;
+  }
+);
+
+interface addRating {
+  id: number;
+  rate: number;
+}
+export const addRating = createAsyncThunk(
+  "device/addRating",
+  async ({ id, rate }: addRating) => {
+    const token = localStorage.getItem("token ");
+    await $authHost.post(`api/rating/${id}`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      rate,
+    });
   }
 );

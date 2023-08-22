@@ -8,15 +8,16 @@ import {
   REGISTRATION_ROUTE,
   SHOP_ROUTE,
 } from "@/constants/constants";
-import Basket from "@/pages/Basket";
-import Device from "@/pages/Device";
-import NotFound from "@/pages/NotFound";
-import Order from "@/pages/Order";
+
 import Shop from "@/pages/Shop";
-import Admin from "@/pages/Admin";
 
 const Login = lazy(() => import("@/pages/Login"));
 const Registration = lazy(() => import("@/pages/Registration"));
+const Admin = lazy(() => import("@/pages/Admin"));
+const Order = lazy(() => import("@/pages/Order"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
+const Basket = lazy(() => import("@/pages/Basket"));
+const Device = lazy(() => import("@/pages/Device"));
 
 export const publicRoutes = [
   {

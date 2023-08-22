@@ -3,7 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 
-interface I_ModalContainer {
+interface I_ErrorModal {
   modalTitle: string;
   modalText: string;
   linkName: string;
@@ -12,7 +12,7 @@ interface I_ModalContainer {
   setOpen: any;
 }
 
-const ModalContainer: FC<I_ModalContainer> = ({
+const ErrorModal: FC<I_ErrorModal> = ({
   modalTitle,
   modalText,
   linkName,
@@ -102,4 +102,4 @@ const ModalContainer: FC<I_ModalContainer> = ({
   );
 };
 
-export default ModalContainer;
+export default ErrorModal;
